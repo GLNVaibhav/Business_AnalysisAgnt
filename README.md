@@ -1,138 +1,201 @@
-# 🧠 Agentic Business Surveillance System
+Agentic Business Surveillance & Decision Intelligence System
 
-AI-powered decision intelligence platform for autonomous business monitoring and recommendations.
+An Agentic AI-driven decision intelligence platform that autonomously monitors business operations, detects risks, simulates outcomes, and assists managers with explainable, data-driven decisions.
 
-## 📋 Quick Start
+This system is designed to work across multiple business domains such as e-commerce, food delivery, logistics, and marketplaces, using a modular multi-agent architecture.
 
-### Using Docker (Recommended)
+🚀 Problem Statement
 
-```bash
-docker-compose up --build
-```
+Modern organizations rely heavily on dashboards and reports, but:
 
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8000
-- API Docs: http://localhost:8000/docs
+Decision-making is manual, slow, and reactive
 
-### Local Development
+Early warning signals are hidden across multiple data sources
 
-```bash
-# Backend
-cd backend
-pip install -r requirements.txt
-uvicorn api:app --reload --port 8080
+Managers often need only specific insights, not full system analysis
 
-# Frontend (new terminal)
-cd frontend
-npm install
-npm run dev
-```
+This project solves that by introducing an Agentic AI system that:
 
-- Frontend: http://localhost:3000
-- Backend: http://localhost:8080
+Continuously monitors business data
 
-## ✨ Features
+Activates only the required agents
 
-- 🔍 Continuous business monitoring (24/7)
-- 📊 Multi-agent AI system (Surveillance → Analysis → Alternatives → Decision)
-- 🎯 What-if scenario simulation
-- 💡 Natural language insights and chat interface
-- 🛡️ Transparent, explainable AI with confidence scores
+Produces human-readable executive insights
 
-## 🏗️ Architecture
+Supports natural-language decision queries
 
-```
-React Frontend (Port 3000)
-    ↓ HTTP/REST
-FastAPI Backend (Port 8000/8080)
-    ↓
-Multi-Agent AI System
-    ├── Surveillance Agent
-    ├── Analysis Agent
-    ├── Alternatives Agent
-    └── Decision Agent
-    ↓
-Business Data (CSV Files)
-```
+🧩 Solution Overview
 
-## 📁 Project Structure
+The system uses independent AI agents, each responsible for a specific business intelligence task.
+Agents collaborate via a shared evolving state, enabling scalability and explainability.
 
-```
-├── backend/           # Backend application
-│   ├── agents/       # AI agent modules
-│   ├── workflow/     # Orchestration logic
-│   ├── utils/        # Utility functions
-│   ├── services/     # Business logic
-│   ├── data/         # Sample data
-│   ├── api.py        # FastAPI app
-│   └── requirements.txt
-├── frontend/          # React application
-│   ├── src/
-│   │   ├── components/
-│   │   ├── services/
-│   │   └── App.jsx
-│   └── package.json
-├── deploy/            # Deployment configs
-│   ├── Dockerfile.backend
-│   └── Dockerfile.frontend
-├── docker-compose.yml
+Core Capabilities
+
+🔍 Risk Surveillance
+
+🧠 Root Cause Analysis
+
+🔄 Alternative Vendor Recommendation
+
+📈 Demand Intelligence
+
+📦 Inventory Risk Prediction
+
+💰 Vendor Price Optimization
+
+💬 Natural-Language Decision Chatbot
+
+🏗️ Agentic Architecture
+Reactive Agents (Core)
+
+Surveillance Agent
+Detects abnormal seller or product behavior using orders and reviews.
+
+Analysis Agent
+Explains why the issue occurred (severity, reasoning).
+
+Alternatives Agent
+Identifies better vendors offering similar quality or pricing.
+
+Decision Agent
+Recommends actions with confidence scoring.
+
+Business Analysis Agent
+Generates a pure text executive summary for managers.
+
+Proactive Intelligence Agents
+
+Demand Intelligence Agent
+Detects fast-moving or slow-moving products.
+
+Inventory Alert Agent
+Predicts potential stock-out risks before they occur.
+
+Vendor Optimization Agent
+Recommends cost-effective vendors without quality loss.
+
+Conversational Layer
+
+Business Chat Agent
+Acts as a Decision Analyst, answering natural-language questions such as:
+
+“What is the current risk?”
+
+“Why was this seller suspended?”
+
+“What happens if we delay action?”
+
+“Which vendor should we switch to?”
+
+🎯 Key Innovation
+✅ Agent Selection Layer
+
+Not all scenarios require all agents.
+
+Examples:
+
+A chef only needs review insights.
+
+A supply manager needs inventory & alternatives.
+
+An executive needs a summary.
+
+The system intelligently activates only the relevant agents, avoiding unnecessary computation.
+
+🛠️ Technology Stack
+Layer	Technology
+Frontend	Streamlit
+Backend	Python
+Data Processing	Pandas
+Architecture	Modular Agentic Workflow
+Version Control	Git & GitHub
+📂 Project Structure
+Business Analysis Agent/
+│
+├── app.py
+├── workflow/
+│   └── orchestrator.py
+├── agents/
+│   ├── agent1_surveillance.py
+│   ├── agent2_analysis.py
+│   ├── agent3_alternatives.py
+│   ├── agent4_decision.py
+│   ├── business_analysis_agent.py
+│   ├── demand_intelligence_agent.py
+│   ├── inventory_alert_agent.py
+│   └── vendor_price_optimization_agent.py
+│
+├── data/
+│   ├── orders.csv
+│   ├── reviews.csv
+│   ├── sellers.csv
+│   └── inventory.csv
+│
+├── requirements.txt
 └── README.md
-```
 
-## 🛠️ Technology Stack
-
-**Frontend:** React 18, Vite, Recharts, Axios  
-**Backend:** FastAPI, Uvicorn, Pandas, Python 3.11+  
-**AI:** Multi-agent LLM system, NLP  
-**DevOps:** Docker, Docker Compose
-
-## 🔗 API Endpoints
-
-- `GET /api/health` - Health check
-- `POST /api/analysis/run` - Upload CSVs and run analysis
-- `POST /api/chat` - Chat with AI advisor
-- `GET /docs` - Interactive API documentation (Swagger UI)
-
-## ⚙️ Configuration
-
-**Environment Variables:**
-
-- Backend: `PYTHONUNBUFFERED=1`
-- Frontend: `VITE_API_URL=http://localhost:8080`
-
-**CSV Format:**
-
-- **orders.csv:** order_id, customer_id, product_id, order_date, amount, status
-- **reviews.csv:** review_id, product_id, rating, review_text, review_date
-- **sellers.csv:** seller_id, seller_name, rating, price, delivery_time
-- **inventory.csv:** product_id, stock_level, reorder_level, last_updated
-
-## 🐛 Troubleshooting
-
-**Port already in use:**
-
-```bash
-# Windows
-netstat -ano | findstr :8080
-taskkill /PID <PID> /F
-```
-
-**Module not found:**
-
-```bash
-cd backend
+▶️ How to Run the Project
+1️⃣ Install Dependencies
 pip install -r requirements.txt
-```
 
-**Docker issues:**
+2️⃣ Run the Application
+streamlit run app.py
 
-```bash
-docker-compose down
-docker-compose up --build
-```
+3️⃣ Upload CSV Files
 
----
+Orders data
 
-## 📄 License
+Reviews data
 
-MIT License - Hackathon Project 2024
+Sellers/Vendors data
+
+Inventory data
+
+📊 Output Highlights
+
+📊 Executive Summary (Natural Language)
+
+⚠️ Risk Alerts
+
+🔄 Vendor Alternatives
+
+📈 Demand Insights
+
+📦 Inventory Alerts
+
+💬 Conversational Decision Support
+
+🌍 Real-World Impact
+
+Faster decision-making
+
+Reduced operational risk
+
+Proactive inventory management
+
+Improved customer satisfaction
+
+Scalable across industries
+
+🏆 Hackathon Readiness
+
+✅ Working prototype
+
+✅ Modular, readable code
+
+✅ Clear business value
+
+✅ Agentic AI architecture
+
+✅ Explainable outputs
+
+✅ GitHub version control
+
+👥 Team
+
+Team Name: sweeyam_team26
+Project: Agentic Business Surveillance System
+
+📌 Final Note
+
+This project demonstrates how Agentic AI systems can move businesses from reactive dashboards to autonomous, explainable decision intelligence.
