@@ -1,5 +1,8 @@
 # sweeyam_team26-main/backend/workflow/orchestrator.py
 
+from google import genai
+from google.genai import types
+
 from agents.agent1_surveillance import surveillance_agent
 from agents.agent2_analysis import analysis_agent
 from agents.agent3_alternatives import alternatives_agent
@@ -15,6 +18,8 @@ from utils.schema_normalizer import (
     normalize_sellers_schema,
     normalize_inventory_schema
 )
+
+client = genai.Client()
 
 # 🌐 MULTI-SECTOR KNOWLEDGE ENGINE RULES (PHASED ROLLOUT)
 SECTOR_GUARDRAILS = {
@@ -37,16 +42,36 @@ SECTOR_GUARDRAILS = {
 
 def apply_knowledge_filter(state_data: dict, current_sector: str) -> dict:
     """
-    Applies Ponytail-style structural limits to the state mutations dynamically
-    based on the target operational sector.
+    Actively intercepts the final business summary and applies Ponytail-style
+    structural minimalism using an LLM critique loop.
     """
-    ruleset = SECTOR_GUARDRAILS.get(current_sector.upper(), SECTOR_GUARDRAILS["ECOMMERCE"])
+    sector_key = current_sector.upper()
+    ruleset = SECTOR_GUARDRAILS.get(sector_key, SECTOR_GUARDRAILS["ECOMMERCE"])
     
-    # Structural Filter Layer applied directly to textual insights
-    if "business_summary" in state_data and isinstance(state_data["business_summary"], str):
-        # In a deep production setup, you would pass the text back to an LLM system prompt 
-        # using this ruleset. For now, we inject the operational directive context safely.
-        state_data["meta_sector_framework"] = f"Verified under framework: {current_sector.upper()}"
+    if "business_summary" in state_data and state_data["business_summary"]:
+        raw_summary = state_data["business_summary"]
+        
+        system_prompt = f"""
+        {ruleset}
+        
+        CRITICAL JOB: You are a strict editor. Review the text provided and strip out any 
+        over-engineered assumptions, speculative jargon, or repetitive wording.
+        Rewrite it to be dense, scannable, and directly practical for a stakeholder in the {sector_key} industry.
+        """
+        
+        # Call a fast model to prune the final output down to strict minimalist compliance
+        referee_response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=f"Text to sanitize:\n{raw_summary}",
+            config=types.GenerateContentConfig(
+                system_instruction=system_prompt,
+                temperature=0.1  # Low temperature ensures rigid rule adherence
+            )
+        )
+        
+        # Overwrite the summary with the pristine, minimal version
+        state_data["business_summary"] = referee_response.text
+        state_data["meta_sector_framework"] = f"Verified under framework: {sector_key}"
         
     return state_data
 
@@ -75,12 +100,12 @@ def run_workflow(orders_df, reviews_df, sellers_df, inventory_df, sector: str = 
         "active_sector": sector.upper()  # Tractable sector marker
     }
 
-    # --- 1. SEQUENTIAL CORE ANALYSIS CORE WORKFLOW ---
+    # --- 1. SEQUENTIAL CORE ANALYSIS WORKFLOW ---
     state = surveillance_agent(orders_df, reviews_df, state)
     state = analysis_agent(state)
     state = alternatives_agent(state, sellers_df)
     state = decision_agent(state)
-    state = business_analysis_agent(state)
+    state = business_analysis_agent(state)  # Dynamic sector prompt handles this now!
 
     # --- 2. PARALLEL DOMAIN INTELLIGENCE ENGINE ---
     state["demand_insights"] = demand_intelligence_agent(orders_df)
@@ -90,7 +115,7 @@ def run_workflow(orders_df, reviews_df, sellers_df, inventory_df, sector: str = 
     )
 
     # --- 3. KNOWLEDGE GUARDRAIL INTERCEPTION MIDDLEWARE ---
-    # Intercepts state payload and applies the minimalist multi-sector filter definitions
+    # Actively sanitizes and rewrites the final summary based on your rollout sector
     state = apply_knowledge_filter(state, current_sector=sector)
 
     return state
